@@ -1,0 +1,24 @@
+# Orchis-Dark — Ghostty custom theme
+background = #0E1113
+foreground = #D8DEE9
+selection-background = #2B3137
+selection-foreground = #E6EDF3
+cursor-color = #8AB4F8
+
+palette = 0=#1C2126
+palette = 1=#E06C75
+palette = 2=#98C379
+palette = 3=#E5C07B
+palette = 4=#5AA2F6
+palette = 5=#C678DD
+palette = 6=#56B6C2
+palette = 7=#ABB2BF
+palette = 8=#3A3F46
+palette = 9=#F28B92
+palette = 10=#B7E3A0
+palette = 11=#F3DFA1
+palette = 12=#79B0F7
+palette = 13=#D6A1FF
+palette = 14=#6ED6D8
+palette = 15=#E6EDF3
+

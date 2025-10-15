@@ -1,0 +1,79 @@
+# ─────────────────────────────────────────────────────────────
+# Ghostty Config — Linux Mint Edition (Cobalt2 Theme Integrated)
+# ─────────────────────────────────────────────────────────────
+# Environment: bash + atuin + inshellisense
+# Philosophy: performance, clarity, and comfort
+# ─────────────────────────────────────────────────────────────
+
+# ---------- Fonts ----------
+font-family = "JetBrains Mono"
+font-size = 12.5
+# Optional: disable ligatures if you prefer clarity
+# font-feature = -calt,-liga,-dlig
+
+grapheme-width-method = unicode
+
+# ---------- Theme: Cobalt2 ----------
+theme = "Cobalt2"
+
+# ---------- Window & Layout ----------
+window-decoration = server
+window-theme = ghostty
+window-padding-x = 6
+window-padding-y = 4
+window-padding-balance = true
+window-width  = 120
+window-height = 34
+window-show-tab-bar = auto
+
+# ---------- Scrolling & Selection ----------
+# limit: 256MB
+scrollback-limit = 268435456
+mouse-scroll-multiplier = 4
+mouse-hide-while-typing = true
+selection-clear-on-typing = true
+selection-clear-on-copy   = false
+copy-on-select = true
+# right-click-action = copy-or-paste
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true
+clipboard-read  = ask
+clipboard-write = allow
+
+# ---------- Shell & Integration ----------
+shell-integration = detect
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+window-inherit-working-directory = true
+window-inherit-font-size = true
+
+# ---------- Notifications & Links ----------
+link-previews = osc8
+app-notifications = clipboard-copy,config-reload
+desktop-notifications = true
+
+# ---------- Quick Terminal ----------
+quick-terminal-position = top
+quick-terminal-size     = 35%
+
+# ---------- Keybindings ----------
+# Reload & fullscreen
+keybind = ctrl+shift+r=reload_config
+keybind = ctrl+shift+f=toggle_fullscreen
+
+# Tabs & splits
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+w=close_surface
+keybind = ctrl+shift+Enter=new_split:down
+keybind = ctrl+shift+Backspace=new_split:right
+
+# Clipboard
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# Quick terminal toggle
+keybind = ctrl+Backquote=toggle_quick_terminal
+
+# ---------- Safety & System ----------
+async-backend = auto
+term = xterm-ghostty
+config-file = ?local.conf
