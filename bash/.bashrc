@@ -24,6 +24,7 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 PATH="$HOME/.local/bin:$PATH"
+[ -f ~/.bash_profile ] && source ~/.bash_profile
 
 # ---------------------------------------------------------------------
 # 2.1) Environment Detector
@@ -188,9 +189,6 @@ fi
 # 11) Prompt Builder (Cobalt2-inspired theme)
 # ---------------------------------------------------------------------
 if [ "$IS_MAIN_TERMINAL" = true ]; then
-  # ------------------------------------------------------------
-# 12) Prompt builder (Layout: Info on Top)
-# ------------------------------------------------------------
   __prompt_command() {
     local EXIT=${__LAST_EXIT:-0}
     local dur=""
@@ -198,14 +196,9 @@ if [ "$IS_MAIN_TERMINAL" = true ]; then
       dur="$(__fmt_seconds "$__last_cmd_dur")"
     fi
 
-    # Colors (sama seperti sebelumnya)
-    if tput setaf 1 >/dev/null 2>&1; then
-      local RESET=$(tput sgr0); local Y=$(tput setaf 3); local C=$(tput setaf 6); local P=$(tput setaf 5)
-      local B=$(tput setaf 4); local G=$(tput setaf 2); local R=$(tput setaf 1)
-    else
-      local RESET='\[\e[0m\]'; local Y='\[\e[33m\]'; local C='\[\e[36m\]'; local P='\[\e[35m\]'
-      local B='\[\e[34m\]'; local G='\[\e[32m\]'; local R='\[\e[31m\]'
-    fi
+    # Colors are defined with proper escaping for PS1
+    local RESET='\[\e[0m\]'; local Y='\[\e[33m\]'; local C='\[\e[36m\]'; local P='\[\e[35m\]'
+    local B='\[\e[34m\]'; local G='\[\e[32m\]'; local R='\[\e[31m\]'
 
     # --- Segments ---
     local hostpart="${B}\h${RESET}"
@@ -221,10 +214,9 @@ if [ "$IS_MAIN_TERMINAL" = true ]; then
     local dirpart="${B}\w${RESET}"
     local userpart="${Y}\u${RESET}"
 
-    # --- Assemble the Prompt (Logika Baru) ---
-    # Baris 1: Path direktori, lalu info git.
+    # Line 1: Path and Git info. Long strings have their own line.
     PS1="${dirpart}${gitpart}\n"
-    # Baris 2: Status, Durasi, Host, Venv, User, dan prompt.
+    # Line 2: Status, ancillary info, and the prompt cursor.
     PS1+="${statuspart}${durpart}${venvpart} ${userpart}@${hostpart} ${C}❯${RESET} "
   }
 else
