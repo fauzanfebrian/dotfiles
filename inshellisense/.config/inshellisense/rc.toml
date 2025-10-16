@@ -1,7 +1,7 @@
 [bindings.acceptSuggestion]
 key = "right"
 # shift and ctrl are optional and default to false
-shift = false
+shift = true
 ctrl = false
 
 [bindings.nextSuggestion]
