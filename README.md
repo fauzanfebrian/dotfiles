@@ -1,7 +1,7 @@
 # Dotfiles
 
-Personal configuration files by [fauzanfebrian](https://github.com/fauzanfebrian),
-based on **Linux Mint / Ubuntu** environment and managed with **GNU Stow**.
+Personal configuration files by [fauzanfebrian](https://github.com/fauzanfebrian), based on **Linux Mint / Ubuntu**
+environment and managed with **GNU Stow**.
 
 Each directory here is a stow package that mirrors its target path inside `$HOME`.
 
@@ -15,39 +15,44 @@ Each directory here is a stow package that mirrors its target path inside `$HOME
 └── setup.sh           →  stow all packages into ~
 ```
 
----
-
 ## Installation
 
-Clone the repo anywhere:
+Installation is a two-step process: bootstrapping the system with necessary software, then applying the personal
+configurations.
+
+### Step 1: Run System Bootstrap (For a Fresh Install)
+
+This script installs all applications, system tweaks, and development environments.
 
 ```bash
+# Clone the repository
 git clone https://github.com/fauzanfebrian/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./setup.sh
+
+# Run the main setup script
+sudo ./setup.sh
+
+# IMPORTANT: Log out and log back in before proceeding to the next step.
 ```
 
----
+### Step 2: Apply Configurations
 
-## Requirements
-
-Install GNU Stow if not already present:
+This script will symlink all the configuration files into your home directory using Stow.
 
 ```bash
-sudo apt install stow
+# From inside the ~/.dotfiles directory
+./install.sh #warning this will remove all existed dotfiles in your home directory.
 ```
-
----
 
 ## Notes
 
-- Designed for **Linux Mint / Ubuntu** systems.
-- Fonts are placed under `~/.local/share/fonts`.
-- Run `fc-cache -fv` to refresh fonts if needed.
-- To remove symlinks, use:
-  ```bash
-  stow -D -t ~ bash vim ghostty inshellisense fonts
-  ```
+-   Designed for **Linux Mint / Ubuntu** systems.
+-   Fonts are placed under `~/.local/share/fonts`.
+-   Run `fc-cache -fv` to refresh fonts if needed.
+-   To remove symlinks, use:
+    ```bash
+    stow -D -t ~ bash vim ghostty inshellisense fonts
+    ```
 
 ---
 

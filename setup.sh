@@ -128,12 +128,13 @@ install_golang() {
 install_applications() {
     echo -e "${BLUE}>>> Phase 5: Installing Applications (Ghostty, VS Code)${NC}"
     if ! command -v ghostty &> /dev/null; then echo "--> Installing Ghostty..."; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"; else echo -e "${YELLOW}--> Ghostty is already installed. Skipping.${NC}"; fi
-    if ! command -v code &> /dev/null; then
-        echo "--> Installing VS Code..."
-        wget -q --show-progress -O /tmp/vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-        apt-get install -y /tmp/vscode.deb
-        rm /tmp/vscode.deb
-    else echo -e "${YELLOW}--> VS Code is already installed. Skipping.${NC}"; fi
+    if ! command -v stow &> /dev/null; then
+        echo "--> Installing stow..."
+        apt-get update
+        apt-get install -y stow
+    else
+        echo -e "${YELLOW}--> stow is already installed. Skipping.${NC}"
+    fi
     echo -e "${GREEN}Application installation complete.${NC}"
 }
 
