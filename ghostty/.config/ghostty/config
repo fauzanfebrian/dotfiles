@@ -65,6 +65,10 @@ keybind = ctrl+shift+t=new_tab
 keybind = ctrl+shift+w=close_surface
 keybind = ctrl+shift+Enter=new_split:down
 keybind = ctrl+shift+Backspace=new_split:right
+keybind = ctrl+right=goto_split:right
+keybind = ctrl+left=goto_split:left
+keybind = ctrl+up=goto_split:up
+keybind = ctrl+down=goto_split:down
 
 # Clipboard
 keybind = ctrl+shift+c=copy_to_clipboard

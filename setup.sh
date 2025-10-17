@@ -50,8 +50,9 @@ system_tweaks_and_essentials() {
     systemctl enable zramswap.service && systemctl restart zramswap.service
 
     echo "--> Creating 4GB fallback swap file (if it doesn't exist)..."
-    if [ -f /swapfile ]; then
-        echo -e "${YELLOW}--> /swapfile already exists. Skipping creation.${NC}"
+    # Check for any existing swap file (not just named /swapfile)
+    if swapon --noheadings --show=NAME,TYPE | awk '$2 == "file" {print $1}' | grep -q '^/'; then
+        echo -e "${YELLOW}--> A swap file already exists on this system. Skipping creation of new swap file.${NC}"
     else
         fallocate -l 4G /swapfile
         chmod 600 /swapfile
@@ -68,7 +69,12 @@ system_tweaks_and_essentials() {
     systemctl enable thermald.service && systemctl start thermald.service
 
     echo "--> Aggressively debloating default Mint applications..."
-    apt-get purge -y warpinator mintwelcome hexchat thunderbird celluloid hypnotix rhythmbox drawing libre*
+    DEBLOAT_PKGS=(warpinator mintwelcome hexchat thunderbird celluloid hypnotix rhythmbox drawing libre*)
+    for pkg in "${DEBLOAT_PKGS[@]}"; do
+        if dpkg -s "$pkg" &> /dev/null; then
+            apt-get purge -y "$pkg"
+        fi
+    done
 
     echo "--> Disabling unnecessary services..."
     systemctl disable --now ModemManager.service
@@ -97,7 +103,7 @@ install_docker() {
     echo "--> Installing Docker packages..."
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     echo "--> Adding current user ($SUDO_USER) to the 'docker' group..."
-    usermod -aG docker $SUDO_USER
+    usermod -aG docker "$SUDO_USER"
     echo -e "${GREEN}Docker Engine installation complete.${NC}"
 }
 
@@ -113,9 +119,9 @@ install_golang() {
     if command -v go &> /dev/null; then echo -e "${YELLOW}--> Go is already installed. Skipping.${NC}"; return; fi
     echo -e "${BLUE}>>> Phase 4: Installing Go (Latest Version)${NC}"
     echo "--> Fetching latest Go version..."
-    LATEST_GO_URL=$(curl -s https://go.dev/dl/ | grep -oP 'https:\/\/go\.dev\/dl\/go[0-9\.]+\.linux-amd64\.tar\.gz' | head -1)
-    LATEST_GO_FILENAME=$(basename $LATEST_GO_URL)
-    if [ -z "$LATEST_GO_URL" ]; then echo "Could not find latest Go version. Exiting."; exit 1; fi
+    LATEST_GO_URL=$(curl -s https://go.dev/dl/   | grep -oE '/dl/go[0-9]+(\.[0-9]+)*\.linux-amd64\.tar\.gz'   | head -1   | sed 's#^#https://go.dev#')
+    if [ -z "$LATEST_GO_URL" ]; then echo "Could not find latest Go version. Install it manually."; return; fi
+    LATEST_GO_FILENAME=$(basename "$LATEST_GO_URL")
     echo "--> Downloading $LATEST_GO_FILENAME..."
     wget -q --show-progress -O "/tmp/$LATEST_GO_FILENAME" "$LATEST_GO_URL"
     echo "--> Extracting Go to /usr/local..."
