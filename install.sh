@@ -10,5 +10,6 @@ stow -t ~ ghostty
 stow -t ~ inshellisense
 stow -t ~ fonts
 stow -t ~ copyq
+stow -t ~ starship
 
 echo "✅ All dotfiles stowed into ~"

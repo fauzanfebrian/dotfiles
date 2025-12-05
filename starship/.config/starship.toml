@@ -1,0 +1,64 @@
+# ~/.config/starship.toml
+
+# A minimal, two-line prompt inspired by Cobalt2
+# Matches the philosophy of your previous .bashrc
+
+add_newline = false
+
+[character]
+success_symbol = "[❯](bold cyan)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+# --- Line 1 ---
+[directory]
+style = "blue"
+truncation_length = 3
+truncate_to_repo = true
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+style = "yellow"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "red"
+format = "[$all_status$ahead_behind]($style)"
+
+# --- Line 2 ---
+[line_break]
+disabled = false
+
+[cmd_duration]
+min_time = 2_000
+format = "[$duration](cyan) "
+
+[python]
+symbol = "py "
+style = "purple"
+format = "[${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
+
+[golang]
+symbol = "go "
+style = "cyan"
+format = "[$symbol($version )]($style)"
+
+[hostname]
+ssh_only = false
+format = "[$hostname](bold blue) "
+disabled = false
+
+[username]
+style_user = "yellow"
+style_root = "red"
+format = "[$user]($style)@"
+show_always = true
+
+# Disable modules we don't need to keep it clean
+[aws]
+disabled = true
+[gcloud]
+disabled = true
+[nodejs]
+disabled = true # NVM usually handles this indication well enough, enable if you want version shown

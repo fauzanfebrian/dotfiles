@@ -133,6 +133,10 @@ install_golang() {
 
 install_applications() {
     echo -e "${BLUE}>>> Phase 5: Installing Applications (Ghostty, VS Code)${NC}"
+
+    echo "--> Installing Starship..."
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+
     if ! command -v ghostty &> /dev/null; then echo "--> Installing Ghostty..."; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mkasberg/ghostty-ubuntu/HEAD/install.sh)"; else echo -e "${YELLOW}--> Ghostty is already installed. Skipping.${NC}"; fi
 
     if ! command -v stow &> /dev/null; then
