@@ -1,0 +1,46 @@
+{
+  "general": {
+    "enablePromptCompletion": true,
+    "checkpointing": {
+      "enabled": true
+    },
+    "sessionRetention": {
+      "enabled": true,
+      "maxAge": "14d",
+      "maxCount": 50
+    },
+    "preferredEditor": "code",
+    "disableUpdateNag": false,
+    "previewFeatures": true
+  },
+  "ui": {
+    "theme": "GitHub",
+    "showLineNumbers": true,
+    "showModelInfoInChat": true,
+    "useFullWidth": true,
+    "incrementalRendering": true,
+    "hideContextSummary": true
+  },
+  "tools": {
+    "useRipgrep": true,
+    "enableToolOutputTruncation": true,
+    "autoAccept": false,
+    "shell": {
+      "showColor": true
+    }
+  },
+  "experimental": {
+    "skills": true
+  },
+  "ide": {
+    "enabled": true
+  },
+  "advanced": {
+    "excludedEnvVars": [
+      "GOOGLE_CLOUD_PROJECT",
+      "DEBUG",
+      "DEBUG_MODE",
+      "GOOGLE_CLOUD_PROJECT_ID"
+    ]
+  }
+}

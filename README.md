@@ -12,6 +12,9 @@ Each directory here is a stow package that mirrors its target path inside `$HOME
 ├── ghostty/           →  ~/.config/ghostty/
 ├── inshellisense/     →  ~/.config/inshellisense/
 ├── fonts/             →  ~/.local/share/fonts/
+├── copyq/             →  ~/.config/copyq/
+├── starship/          →  ~/.config/starship.toml
+├── gemini-cli/        →  ~/.gemini/
 └── setup.sh           →  stow all packages into ~
 ```
 
@@ -51,7 +54,7 @@ This script will symlink all the configuration files into your home directory us
 -   Run `fc-cache -fv` to refresh fonts if needed.
 -   To remove symlinks, use:
     ```bash
-    stow -D -t ~ bash vim ghostty inshellisense fonts
+    stow -D -t ~ bash vim ghostty inshellisense fonts copyq starship gemini-cli
     ```
 
 ---

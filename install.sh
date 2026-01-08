@@ -11,5 +11,6 @@ stow -t ~ inshellisense
 stow -t ~ fonts
 stow -t ~ copyq
 stow -t ~ starship
+stow -t ~ gemini-cli
 
 echo "✅ All dotfiles stowed into ~"

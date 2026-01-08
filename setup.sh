@@ -179,6 +179,7 @@ main() {
     echo -e "   - ${GREEN}nvm install --lts${NC} (to install Node.js)"
     echo -e "   - ${GREEN}pyenv install 3.12.6${NC} (replace with your desired Python version)"
     echo -e "   - ${GREEN}npm install -g @inshellisense/cli${NC}"
+    echo -e "   - ${GREEN}npm install -g @google/gemini-cli${NC}"
     echo -e "   - ${GREEN}inshellisense bind${NC} (to set up smart autocomplete)"
     echo -e "   - ${GREEN}atuin import auto${NC} (to import your shell history)"
     echo ""
