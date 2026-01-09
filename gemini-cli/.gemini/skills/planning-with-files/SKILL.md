@@ -1,6 +1,18 @@
 ---
 name: planning-with-files
-description: Transforms workflow to use Manus-style persistent markdown files for planning, progress tracking, and knowledge storage. Use when starting complex tasks, multi-step projects, research tasks, or when the user mentions planning, organizing work, tracking progress, or wants structured output.
+version: "2.0.0"
+description: Implements Manus-style file-based planning for complex tasks. Creates task_plan.md, findings.md, and progress.md. Use when starting complex multi-step tasks, research projects, or any task requiring >5 tool calls.
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit|Bash"
+      hooks:
+        - type: command
+          command: "cat task_plan.md 2>/dev/null | head -30 || true"
+  Stop:
+    - hooks:
+        - type: command
+          command: "${CLAUDE_PLUGIN_ROOT}/scripts/check-complete.sh"
 ---
 
 # Planning with Files
@@ -11,126 +23,120 @@ Work like Manus: Use persistent markdown files as your "working memory on disk."
 
 Before ANY complex task:
 
-1. **Create `task_plan.md`** in the working directory
-2. **Define phases** with checkboxes
-3. **Update after each phase** - mark [x] and change status
-4. **Read before deciding** - refresh goals in attention window
+1. **Create `task_plan.md`** — See [templates/task_plan.md](templates/task_plan.md)
+2. **Create `findings.md`** — See [templates/findings.md](templates/findings.md)
+3. **Create `progress.md`** — See [templates/progress.md](templates/progress.md)
+4. **Re-read plan before decisions** — Refreshes goals in attention window
+5. **Update after each phase** — Mark complete, log errors
 
-## The 3-File Pattern
+## The Core Pattern
 
-For every non-trivial task, create THREE files:
+```
+Context Window = RAM (volatile, limited)
+Filesystem = Disk (persistent, unlimited)
+
+→ Anything important gets written to disk.
+```
+
+## File Purposes
 
 | File | Purpose | When to Update |
 |------|---------|----------------|
-| `task_plan.md` | Track phases and progress | After each phase |
-| `notes.md` | Store findings and research | During research |
-| `[deliverable].md` | Final output | At completion |
-
-## Core Workflow
-
-```
-Loop 1: Create task_plan.md with goal and phases
-Loop 2: Research → save to notes.md → update task_plan.md
-Loop 3: Read notes.md → create deliverable → update task_plan.md
-Loop 4: Deliver final output
-```
-
-### The Loop in Detail
-
-**Before each major action:**
-```bash
-Read task_plan.md  # Refresh goals in attention window
-```
-
-**After each phase:**
-```bash
-Edit task_plan.md  # Mark [x], update status
-```
-
-**When storing information:**
-```bash
-Write notes.md     # Don't stuff context, store in file
-```
-
-## task_plan.md Template
-
-Create this file FIRST for any complex task:
-
-```markdown
-# Task Plan: [Brief Description]
-
-## Goal
-[One sentence describing the end state]
-
-## Phases
-- [ ] Phase 1: Plan and setup
-- [ ] Phase 2: Research/gather information
-- [ ] Phase 3: Execute/build
-- [ ] Phase 4: Review and deliver
-
-## Key Questions
-1. [Question to answer]
-2. [Question to answer]
-
-## Decisions Made
-- [Decision]: [Rationale]
-
-## Errors Encountered
-- [Error]: [Resolution]
-
-## Status
-**Currently in Phase X** - [What I'm doing now]
-```
-
-## notes.md Template
-
-For research and findings:
-
-```markdown
-# Notes: [Topic]
-
-## Sources
-
-### Source 1: [Name]
-- URL: [link]
-- Key points:
-  - [Finding]
-  - [Finding]
-
-## Synthesized Findings
-
-### [Category]
-- [Finding]
-- [Finding]
-```
+| `task_plan.md` | Phases, progress, decisions | After each phase |
+| `findings.md` | Research, discoveries | After ANY discovery |
+| `progress.md` | Session log, test results | Throughout session |
 
 ## Critical Rules
 
-### 1. ALWAYS Create Plan First
-Never start a complex task without `task_plan.md`. This is non-negotiable.
+### 1. Create Plan First
+Never start a complex task without `task_plan.md`. Non-negotiable.
 
-### 2. Read Before Decide
-Before any major decision, read the plan file. This keeps goals in your attention window.
+### 2. The 2-Action Rule
+> "After every 2 view/browser/search operations, IMMEDIATELY save key findings to text files."
 
-### 3. Update After Act
-After completing any phase, immediately update the plan file:
-- Mark completed phases with [x]
-- Update the Status section
+This prevents visual/multimodal information from being lost.
+
+### 3. Read Before Decide
+Before major decisions, read the plan file. This keeps goals in your attention window.
+
+### 4. Update After Act
+After completing any phase:
+- Mark phase status: `in_progress` → `complete`
 - Log any errors encountered
+- Note files created/modified
 
-### 4. Store, Don't Stuff
-Large outputs go to files, not context. Keep only paths in working memory.
+### 5. Log ALL Errors
+Every error goes in the plan file. This builds knowledge and prevents repetition.
 
-### 5. Log All Errors
-Every error goes in the "Errors Encountered" section. This builds knowledge for future tasks.
+```markdown
+## Errors Encountered
+| Error | Attempt | Resolution |
+|-------|---------|------------|
+| FileNotFoundError | 1 | Created default config |
+| API timeout | 2 | Added retry logic |
+```
+
+### 6. Never Repeat Failures
+```
+if action_failed:
+    next_action != same_action
+```
+Track what you tried. Mutate the approach.
+
+## The 3-Strike Error Protocol
+
+```
+ATTEMPT 1: Diagnose & Fix
+  → Read error carefully
+  → Identify root cause
+  → Apply targeted fix
+
+ATTEMPT 2: Alternative Approach
+  → Same error? Try different method
+  → Different tool? Different library?
+  → NEVER repeat exact same failing action
+
+ATTEMPT 3: Broader Rethink
+  → Question assumptions
+  → Search for solutions
+  → Consider updating the plan
+
+AFTER 3 FAILURES: Escalate to User
+  → Explain what you tried
+  → Share the specific error
+  → Ask for guidance
+```
+
+## Read vs Write Decision Matrix
+
+| Situation | Action | Reason |
+|-----------|--------|--------|
+| Just wrote a file | DON'T read | Content still in context |
+| Viewed image/PDF | Write findings NOW | Multimodal → text before lost |
+| Browser returned data | Write to file | Screenshots don't persist |
+| Starting new phase | Read plan/findings | Re-orient if context stale |
+| Error occurred | Read relevant file | Need current state to fix |
+| Resuming after gap | Read all planning files | Recover state |
+
+## The 5-Question Reboot Test
+
+If you can answer these, your context management is solid:
+
+| Question | Answer Source |
+|----------|---------------|
+| Where am I? | Current phase in task_plan.md |
+| Where am I going? | Remaining phases |
+| What's the goal? | Goal statement in plan |
+| What have I learned? | findings.md |
+| What have I done? | progress.md |
 
 ## When to Use This Pattern
 
-**Use 3-file pattern for:**
+**Use for:**
 - Multi-step tasks (3+ steps)
 - Research tasks
-- Building/creating something
-- Tasks spanning multiple tool calls
+- Building/creating projects
+- Tasks spanning many tool calls
 - Anything requiring organization
 
 **Skip for:**
@@ -138,23 +144,33 @@ Every error goes in the "Errors Encountered" section. This builds knowledge for 
 - Single-file edits
 - Quick lookups
 
-## Anti-Patterns to Avoid
+## Templates
+
+Copy these templates to start:
+
+- [templates/task_plan.md](templates/task_plan.md) — Phase tracking
+- [templates/findings.md](templates/findings.md) — Research storage
+- [templates/progress.md](templates/progress.md) — Session logging
+
+## Scripts
+
+Helper scripts for automation:
+
+- `scripts/init-session.sh` — Initialize all planning files
+- `scripts/check-complete.sh` — Verify all phases complete
+
+## Advanced Topics
+
+- **Manus Principles:** See [reference.md](reference.md)
+- **Real Examples:** See [examples.md](examples.md)
+
+## Anti-Patterns
 
 | Don't | Do Instead |
 |-------|------------|
-| Use TodoWrite for persistence | Create `task_plan.md` file |
-| State goals once and forget | Re-read plan before each decision |
-| Hide errors and retry | Log errors to plan file |
+| Use TodoWrite for persistence | Create task_plan.md file |
+| State goals once and forget | Re-read plan before decisions |
+| Hide errors and retry silently | Log errors to plan file |
 | Stuff everything in context | Store large content in files |
 | Start executing immediately | Create plan file FIRST |
-
-## Advanced Patterns
-
-See [reference.md](reference.md) for:
-- Attention manipulation techniques
-- Error recovery patterns
-- Context optimization from Manus
-
-See [examples.md](examples.md) for:
-- Real task examples
-- Complex workflow patterns
+| Repeat failed actions | Track attempts, mutate approach |
