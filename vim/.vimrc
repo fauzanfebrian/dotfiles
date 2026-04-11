@@ -145,7 +145,7 @@ autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "
 " =====================================================================
 let mapleader = " "                 " space as leader
 
-" Save/quit
+" Standard save / quit / save-and-exit (leader + w / q / x)
 nnoremap <leader>w :w<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>x :x<CR>
@@ -157,7 +157,11 @@ nnoremap <leader>e :NERDTreeToggle<CR>
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>g :Rg<CR>
 nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>h :History<CR>
+nnoremap <leader>fh :History<CR>
+
+" Buffer navigation (vim-unimpaired style)
+nnoremap ]b :bnext<CR>
+nnoremap [b :bprevious<CR>
 
 " If launching Vim with a directory, open tree then return to file window
 autocmd StdinReadPre * let s:std_in=1
@@ -203,8 +207,6 @@ function! <SID>BufcloseCloseIt() abort
 endfunction
 nnoremap <leader>bd :Bclose<CR>
 nnoremap <leader>ba :bufdo bd<CR>
-nnoremap <leader>l :bnext<CR>
-nnoremap <leader>h :bprevious<CR>
 
 " Tab helpers
 nnoremap <leader>tn :tabnew<CR>
@@ -228,13 +230,12 @@ nnoremap <leader>sp [s
 nnoremap <leader>sa zg
 nnoremap <leader>s? z=
 
-" Quick scratch buffers
-nnoremap <leader>q :e ~/buffer<CR>
-nnoremap <leader>x :e ~/buffer.md<CR>
+" Quick scratch buffers (do not shadow <leader>q / <leader>x)
+nnoremap <leader>bs :e ~/buffer<CR>
+nnoremap <leader>bm :e ~/buffer.md<CR>
 
 " Toggle paste mode
 nnoremap <leader>pp :setlocal paste!<CR>
 
 " Sudo write: :W to save with privileges
 command! W execute 'w !sudo tee % >/dev/null' | edit!
-

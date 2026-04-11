@@ -1,0 +1,10 @@
+# GNU Stow: ignore these pathnames (regex, relative to each package directory).
+# Lines starting with # are comments.
+
+^README\.md$
+^AUDIT_REPORT\.md$
+^\.DS_Store$
+.*\.swp$
+^system-bootstrap\.sh$
+^user-bootstrap\.sh$
+^install\.sh$
