@@ -1,5 +1,5 @@
 " =====================================================================
-" ~/.vimrc — Minimal, fast, non-IDE Vim (Linux Mint + Ghostty/Cobalt2)
+" ~/.vimrc — Minimal, fast, non-IDE Vim (macOS + Ghostty/Cobalt2)
 " Goals:
 "   - Quick editing, no IDE bloat
 "   - Stable absolute numbers (with a neat number separator: `12|`)

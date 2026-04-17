@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────
-# Ghostty Config — Linux Mint Edition (Cobalt2 Theme Integrated)
+# Ghostty Config — macOS (Cobalt2 Theme)
 # ─────────────────────────────────────────────────────────────
-# Environment: bash + atuin + inshellisense
+# Environment: bash 5.x + fzf + starship
 # Philosophy: performance, clarity, and comfort
 # ─────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ grapheme-width-method = unicode
 theme = "Cobalt2"
 
 # ---------- Window & Layout ----------
-window-decoration = server
+window-decoration = true
 window-theme = ghostty
 window-padding-x = 6
 window-padding-y = 4
@@ -34,7 +34,6 @@ mouse-hide-while-typing = true
 selection-clear-on-typing = true
 selection-clear-on-copy   = false
 copy-on-select = true
-# right-click-action = copy-or-paste
 clipboard-trim-trailing-spaces = true
 clipboard-paste-protection = true
 clipboard-read  = ask
@@ -42,9 +41,10 @@ clipboard-write = allow
 
 # ---------- Shell & Integration ----------
 shell-integration = detect
-shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+shell-integration-features = cursor,sudo,title
 window-inherit-working-directory = true
 window-inherit-font-size = true
+command = /opt/homebrew/bin/bash
 
 # ---------- Notifications & Links ----------
 link-previews = osc8

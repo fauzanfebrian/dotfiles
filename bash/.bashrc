@@ -1,9 +1,10 @@
 #!/bin/bash
 
 #######################################################################
-# ~/.bashrc — Linux Mint Developer Setup (Optimized)
+# ~/.bashrc — macOS Developer Setup
 #
-# Stack: bash, ghostty, vim, starship, atuin, pyenv, golang, nvm, docker
+# Stack: bash 5.x (Homebrew), ghostty, vim, starship, fzf, pyenv,
+#        golang, nvm, docker
 # Pyenv and NVM are lazy-loaded on first use (see wrapper functions).
 #######################################################################
 
@@ -22,14 +23,13 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 export PATH="$HOME/.local/bin:$PATH"
+export NODE_EXTRA_CA_CERTS=~/.certs/ZscalerRootCA.pem
 
 # ---------------------------------------------------------------------
-# 3) Environment Detector
+# 3) Homebrew
 # ---------------------------------------------------------------------
-if [[ -n "$PS1" && "${TERM_PROGRAM}" != "vscode" ]]; then
-    export IS_MAIN_TERMINAL=true
-else
-    export IS_MAIN_TERMINAL=false
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # ---------------------------------------------------------------------
@@ -38,11 +38,9 @@ fi
 export GOPATH="${GOPATH:-$HOME/go}"
 export GOBIN="$GOPATH/bin"
 PATH="$GOBIN:$PATH"
-if [ -d /usr/local/go/bin ]; then PATH="/usr/local/go/bin:$PATH"; fi
 
 # ---------------------------------------------------------------------
-# 5) History Settings (Bash Fallback)
-#    Atuin will override this, but good to have a fallback.
+# 5) History Settings
 # ---------------------------------------------------------------------
 shopt -s histappend cmdhist
 HISTSIZE=200000
@@ -55,28 +53,29 @@ HISTTIMEFORMAT='%F %T '
 # ---------------------------------------------------------------------
 shopt -s checkwinsize
 shopt -s cdspell
-shopt -s globstar
+shopt -s globstar 2>/dev/null
 
 # ---------------------------------------------------------------------
 # 7) Colors & Base Aliases
 # ---------------------------------------------------------------------
-if command -v dircolors >/dev/null 2>&1; then
-  eval "$(dircolors -b 2>/dev/null || true)"
-fi
-alias ls='ls --color=auto -h'
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
+alias ls='ls -h'
 alias ll='ls -alF'
 alias la='ls -A'
 alias grep='grep --color=auto'
 alias vi='vim'
 
 # ---------------------------------------------------------------------
-# 8) Pyenv (lazy) — PATH to pyenv binary only; init on first use
+# 8) Pyenv (lazy) — from Homebrew; versions live under ~/.pyenv by default
 # ---------------------------------------------------------------------
 export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
-case ":${PATH}:" in *":${PYENV_ROOT}/bin:"*) ;; *)
-  PATH="${PYENV_ROOT}/bin:${PATH}"
-  ;;
-esac
+if ! command -v pyenv >/dev/null 2>&1; then
+  case ":${PATH}:" in *":${PYENV_ROOT}/bin:"*) ;; *)
+    PATH="${PYENV_ROOT}/bin:${PATH}"
+    ;;
+  esac
+fi
 
 _lazy_pyenv_init() {
   unset -f pyenv python python3 pip pip3 _lazy_pyenv_init
@@ -121,11 +120,9 @@ export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 _lazy_nvm_init() {
   unset -f nvm node npm npx _lazy_nvm_init
   if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-    # shellcheck source=/dev/null
     . "$NVM_DIR/nvm.sh"
   fi
   if [[ -s "$NVM_DIR/bash_completion" ]]; then
-    # shellcheck source=/dev/null
     . "$NVM_DIR/bash_completion"
   fi
 }
@@ -151,19 +148,18 @@ npx() {
 }
 
 # ---------------------------------------------------------------------
-# 10) Completions & Shell UX
+# 10) Completions
+# bash-completion@2 needs Bash ≥ 4.2 ([[ -v ... ]]). macOS /bin/bash is 3.2;
+# use Homebrew bash as login shell, or completions are skipped here.
 # ---------------------------------------------------------------------
-if [ -r /usr/share/bash-completion/bash_completion ]; then
-  # shellcheck source=/dev/null
-  . /usr/share/bash-completion/bash_completion
-elif [ -r /etc/bash_completion ]; then
-  # shellcheck source=/dev/null
-  . /etc/bash_completion
-fi
-
-if command -v docker >/dev/null 2>&1 && ! complete -p docker >/dev/null 2>&1; then
-  # shellcheck source=/dev/null
-  source <(docker completion bash)
+if [[ "${BASH_VERSINFO[0]}" -gt 4 ]] || [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -ge 2 ]]; then
+  export BASH_COMPLETION_COMPAT_DIR="/opt/homebrew/etc/bash_completion.d"
+  if [[ -r "/opt/homebrew/share/bash-completion/bash_completion" ]]; then
+    source "/opt/homebrew/share/bash-completion/bash_completion"
+  fi
+  if command -v docker >/dev/null 2>&1 && ! complete -p docker >/dev/null 2>&1; then
+    source <(docker completion bash)
+  fi
 fi
 
 # ---------------------------------------------------------------------
@@ -171,7 +167,6 @@ fi
 # ---------------------------------------------------------------------
 _dedup_path() {
   local _rest="${PATH:-}" _dir _out="" _seen="|"
-  # Trailing colon ensures the final segment is processed
   _rest="${_rest}:"
   while [[ -n "$_rest" ]]; do
     _dir="${_rest%%:*}"
@@ -197,14 +192,8 @@ else
     PS1='\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
 fi
 
-if [ "$IS_MAIN_TERMINAL" = true ]; then
-    if command -v atuin >/dev/null 2>&1; then
-        eval "$(atuin init bash)"
-    fi
-
-    if command -v is >/dev/null 2>&1; then
-      eval "$(is init bash)"
-    fi
+if command -v fzf >/dev/null 2>&1; then
+    eval "$(fzf --bash)"
 fi
 
 # ---------------------------------------------------------------------
@@ -232,6 +221,3 @@ alias got='go test ./...'
 alias gor='go run'
 alias pipu='python -m pip install --upgrade pip'
 alias venv='python -m venv .venv && source .venv/bin/activate'
-
-alias reboot-windows='sudo grub-reboot "Windows Boot Manager (on /dev/nvme0n1p1)" && sudo reboot'
-unset -f command_not_found_handle 2>/dev/null || true

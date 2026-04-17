@@ -1,7 +1,6 @@
 # ~/.config/starship.toml
 
 # A minimal, two-line prompt inspired by Cobalt2
-# Matches the philosophy of your previous .bashrc
 
 add_newline = false
 
@@ -45,7 +44,7 @@ style = "cyan"
 format = "[$symbol($version )]($style)"
 
 [hostname]
-ssh_only = false
+ssh_only = true
 format = "[$hostname](bold blue) "
 disabled = false
 
@@ -53,7 +52,7 @@ disabled = false
 style_user = "yellow"
 style_root = "red"
 format = "[$user]($style)@"
-show_always = true
+show_always = false
 
 # Disable modules we don't need to keep it clean
 [aws]
