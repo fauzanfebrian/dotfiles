@@ -23,7 +23,10 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 export PATH="$HOME/.local/bin:$PATH"
-export NODE_EXTRA_CA_CERTS=~/.certs/ZscalerRootCA.pem
+export PROMPT_COMMAND="history -a; history -n; history -w"
+export NODE_EXTRA_CA_CERTS="$HOME/.certs/ZscalerRootCA.pem"
+export AWS_CA_BUNDLE="$HOME/.certs/ZscalerRootCA.pem"
+export REQUESTS_CA_BUNDLE="$HOME/.certs/ZscalerRootCA.pem"
 
 # ---------------------------------------------------------------------
 # 3) Homebrew
