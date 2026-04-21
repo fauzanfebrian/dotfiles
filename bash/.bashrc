@@ -5,7 +5,7 @@
 #
 # Stack: bash 5.x (Homebrew), ghostty, vim, starship, fzf, pyenv,
 #        golang, nvm, docker
-# Pyenv and NVM are lazy-loaded on first use (see wrapper functions).
+# Pyenv and NVM are initialized eagerly at startup.
 #######################################################################
 
 # ---------------------------------------------------------------------
@@ -24,9 +24,6 @@ export VISUAL=vim
 export PAGER=less
 export PATH="$HOME/.local/bin:$PATH"
 export PROMPT_COMMAND="history -a; history -n; history -w"
-export NODE_EXTRA_CA_CERTS="$HOME/.certs/ZscalerRootCA.pem"
-export AWS_CA_BUNDLE="$HOME/.certs/ZscalerRootCA.pem"
-export REQUESTS_CA_BUNDLE="$HOME/.certs/ZscalerRootCA.pem"
 
 # ---------------------------------------------------------------------
 # 3) Homebrew
@@ -41,6 +38,13 @@ fi
 export GOPATH="${GOPATH:-$HOME/go}"
 export GOBIN="$GOPATH/bin"
 PATH="$GOBIN:$PATH"
+
+# ---------------------------------------------------------------------
+# Java Environment
+# ---------------------------------------------------------------------
+JAVA_HOME="$("/usr/libexec/java_home")"
+export JAVA_HOME
+export PATH="$JAVA_HOME/bin:$PATH"
 
 # ---------------------------------------------------------------------
 # 5) History Settings
@@ -70,7 +74,7 @@ alias grep='grep --color=auto'
 alias vi='vim'
 
 # ---------------------------------------------------------------------
-# 8) Pyenv (lazy) — from Homebrew; versions live under ~/.pyenv by default
+# 8) Pyenv — from Homebrew; versions live under ~/.pyenv by default
 # ---------------------------------------------------------------------
 export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
 if ! command -v pyenv >/dev/null 2>&1; then
@@ -80,75 +84,24 @@ if ! command -v pyenv >/dev/null 2>&1; then
   esac
 fi
 
-_lazy_pyenv_init() {
-  unset -f pyenv python python3 pip pip3 _lazy_pyenv_init
-  if command -v pyenv >/dev/null 2>&1; then
-    eval "$(pyenv init -)"
-    if command -v pyenv-virtualenv-init >/dev/null 2>&1; then
-      eval "$(pyenv virtualenv-init -)"
-    fi
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  if command -v pyenv-virtualenv-init >/dev/null 2>&1; then
+    eval "$(pyenv virtualenv-init -)"
   fi
-}
-
-pyenv() {
-  _lazy_pyenv_init
-  pyenv "$@"
-}
-
-python() {
-  _lazy_pyenv_init
-  command python "$@"
-}
-
-python3() {
-  _lazy_pyenv_init
-  command python3 "$@"
-}
-
-pip() {
-  _lazy_pyenv_init
-  command pip "$@"
-}
-
-pip3() {
-  _lazy_pyenv_init
-  command pip3 "$@"
-}
+fi
 
 # ---------------------------------------------------------------------
-# 9) NVM (lazy) — no nvm.sh at startup
+# 9) NVM — load nvm.sh at startup
 # ---------------------------------------------------------------------
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
-_lazy_nvm_init() {
-  unset -f nvm node npm npx _lazy_nvm_init
-  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-    . "$NVM_DIR/nvm.sh"
-  fi
-  if [[ -s "$NVM_DIR/bash_completion" ]]; then
-    . "$NVM_DIR/bash_completion"
-  fi
-}
-
-nvm() {
-  _lazy_nvm_init
-  nvm "$@"
-}
-
-node() {
-  _lazy_nvm_init
-  command node "$@"
-}
-
-npm() {
-  _lazy_nvm_init
-  command npm "$@"
-}
-
-npx() {
-  _lazy_nvm_init
-  command npx "$@"
-}
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  . "$NVM_DIR/nvm.sh"
+fi
+if [[ -s "$NVM_DIR/bash_completion" ]]; then
+  . "$NVM_DIR/bash_completion"
+fi
 
 # ---------------------------------------------------------------------
 # 10) Completions
@@ -161,6 +114,7 @@ if [[ "${BASH_VERSINFO[0]}" -gt 4 ]] || [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BAS
     source "/opt/homebrew/share/bash-completion/bash_completion"
   fi
   if command -v docker >/dev/null 2>&1 && ! complete -p docker >/dev/null 2>&1; then
+    # shellcheck disable=SC1090
     source <(docker completion bash)
   fi
 fi
