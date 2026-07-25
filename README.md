@@ -13,7 +13,7 @@ Each top-level directory is a Stow package whose contents mirror the target path
 | Prompt | [Starship](https://starship.rs) | `~/.config/starship.toml` |
 | Editor | Vim 9+ (vim-plug) | `~/.vimrc` |
 | Clipboard | [CopyQ](https://hluk.github.io/CopyQ/) | `~/.config/copyq/` |
-| Fonts | JetBrains Mono, FiraCode, SF Pro | `~/.local/share/fonts/` |
+| Fonts | JetBrains Mono, FiraCode | `~/.local/share/fonts/` |
 
 **Theme:** Cobalt2 — applied consistently across Ghostty, CopyQ, and Starship prompt colors.
 
@@ -58,7 +58,6 @@ Core build tools, Docker, Go under `/usr/local/go`, **stow**, **copyq**, **vim**
 
 - **JetBrains Mono** — primary font for Ghostty, Vim, and CopyQ
 - **FiraCode** — alternative ligature font
-- **SF Pro Display** — UI/display font
 
 After stowing fonts, run `fc-cache -fv` if new fonts do not appear immediately.
 
