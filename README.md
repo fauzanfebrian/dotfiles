@@ -28,6 +28,7 @@ Each top-level directory is a Stow package whose contents mirror the target path
 ├── starship/              → ~/.config/starship.toml
 ├── vim/                   → ~/.vimrc
 ├── .stow-global-ignore    — patterns excluded from stow (see below)
+├── desktop-bootstrap.sh   — user: macOS-inspired Cinnamon theming, Plank dock, keybindings
 ├── install.sh             — stow all packages into ~ (--restow --adopt)
 ├── system-bootstrap.sh    — privileged: apt, Go, Docker, stow, copyq, vim
 └── user-bootstrap.sh      — user: Starship, pyenv, NVM, Ghostty
@@ -84,13 +85,21 @@ Requires `SUDO_USER` (run `sudo` from a logged-in user, not a root-only console)
 ./user-bootstrap.sh
 ```
 
-### 4. Stow configurations
+### 4. Desktop theming (optional, no sudo)
+
+```bash
+./desktop-bootstrap.sh
+```
+
+Applies dark theme, Papirus icons, Inter font, Plank dock, macOS-style natural scroll, left-side window controls, and a Peek screen-recorder keybinding.
+
+### 5. Stow configurations
 
 ```bash
 ./install.sh
 ```
 
-### 5. Session / group refresh
+### 6. Session / group refresh
 
 Log out and back in so the **docker** group and other changes apply.
 
