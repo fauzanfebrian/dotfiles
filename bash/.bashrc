@@ -4,7 +4,6 @@
 # ~/.bashrc — Linux Mint Developer Setup (Optimized)
 #
 # Stack: bash, ghostty, vim, starship, pyenv, golang, nvm, docker
-# Pyenv and NVM are lazy-loaded on first use (see wrapper functions).
 #######################################################################
 
 # ---------------------------------------------------------------------
@@ -69,7 +68,7 @@ alias grep='grep --color=auto'
 alias vi='vim'
 
 # ---------------------------------------------------------------------
-# 8) Pyenv (lazy) — PATH to pyenv binary only; init on first use
+# 8) Pyenv
 # ---------------------------------------------------------------------
 export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
 case ":${PATH}:" in *":${PYENV_ROOT}/bin:"*) ;; *)
@@ -77,77 +76,26 @@ case ":${PATH}:" in *":${PYENV_ROOT}/bin:"*) ;; *)
   ;;
 esac
 
-_lazy_pyenv_init() {
-  unset -f pyenv python python3 pip pip3 _lazy_pyenv_init
-  if command -v pyenv >/dev/null 2>&1; then
-    eval "$(pyenv init -)"
-    if command -v pyenv-virtualenv-init >/dev/null 2>&1; then
-      eval "$(pyenv virtualenv-init -)"
-    fi
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  if command -v pyenv-virtualenv-init >/dev/null 2>&1; then
+    eval "$(pyenv virtualenv-init -)"
   fi
-}
-
-pyenv() {
-  _lazy_pyenv_init
-  pyenv "$@"
-}
-
-python() {
-  _lazy_pyenv_init
-  command python "$@"
-}
-
-python3() {
-  _lazy_pyenv_init
-  command python3 "$@"
-}
-
-pip() {
-  _lazy_pyenv_init
-  command pip "$@"
-}
-
-pip3() {
-  _lazy_pyenv_init
-  command pip3 "$@"
-}
+fi
 
 # ---------------------------------------------------------------------
-# 9) NVM (lazy) — no nvm.sh at startup
+# 9) NVM
 # ---------------------------------------------------------------------
 export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
-_lazy_nvm_init() {
-  unset -f nvm node npm npx _lazy_nvm_init
-  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-    # shellcheck source=/dev/null
-    . "$NVM_DIR/nvm.sh"
-  fi
-  if [[ -s "$NVM_DIR/bash_completion" ]]; then
-    # shellcheck source=/dev/null
-    . "$NVM_DIR/bash_completion"
-  fi
-}
-
-nvm() {
-  _lazy_nvm_init
-  nvm "$@"
-}
-
-node() {
-  _lazy_nvm_init
-  command node "$@"
-}
-
-npm() {
-  _lazy_nvm_init
-  command npm "$@"
-}
-
-npx() {
-  _lazy_nvm_init
-  command npx "$@"
-}
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/nvm.sh"
+fi
+if [[ -s "$NVM_DIR/bash_completion" ]]; then
+  # shellcheck source=/dev/null
+  . "$NVM_DIR/bash_completion"
+fi
 
 # ---------------------------------------------------------------------
 # 10) Completions & Shell UX
