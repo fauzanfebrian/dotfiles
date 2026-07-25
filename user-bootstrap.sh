@@ -1,5 +1,5 @@
 #!/bin/bash
-# User-level bootstrap: Starship, Atuin, pyenv, NVM, Ghostty.
+# User-level bootstrap: Starship, pyenv, NVM, Ghostty.
 # Run as your normal user (no sudo). Some installers may prompt for sudo internally.
 
 set -euo pipefail
@@ -23,15 +23,6 @@ install_starship() {
     fi
     echo -e "${BLUE}--> Installing Starship...${NC}"
     curl -sS https://starship.rs/install.sh | sh -s -- -y
-}
-
-install_atuin() {
-    if command -v atuin &>/dev/null; then
-        echo -e "${YELLOW}--> Atuin already installed. Skipping.${NC}"
-        return
-    fi
-    echo -e "${BLUE}--> Installing Atuin...${NC}"
-    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
 }
 
 install_pyenv() {
@@ -62,9 +53,8 @@ install_ghostty() {
 }
 
 main() {
-    echo -e "${BLUE}>>> User bootstrap (Starship, Atuin, pyenv, NVM, Ghostty)${NC}"
+    echo -e "${BLUE}>>> User bootstrap (Starship, pyenv, NVM, Ghostty)${NC}"
     install_starship
-    install_atuin
     install_pyenv
     install_nvm
     install_ghostty
@@ -75,8 +65,6 @@ main() {
     echo -e "\n${YELLOW}Suggested follow-up:${NC}"
     echo "  nvm install --lts"
     echo "  pyenv install 3.12   # or your preferred version"
-    echo "  npm install -g @inshellisense/cli && inshellisense bind"
-    echo "  atuin import auto"
     echo "  ./install.sh         # stow dotfiles from this repo"
     echo ""
 }

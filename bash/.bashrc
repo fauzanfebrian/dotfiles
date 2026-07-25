@@ -3,7 +3,7 @@
 #######################################################################
 # ~/.bashrc — Linux Mint Developer Setup (Optimized)
 #
-# Stack: bash, ghostty, vim, starship, atuin, pyenv, golang, nvm, docker
+# Stack: bash, ghostty, vim, starship, pyenv, golang, nvm, docker
 # Pyenv and NVM are lazy-loaded on first use (see wrapper functions).
 #######################################################################
 
@@ -41,8 +41,7 @@ PATH="$GOBIN:$PATH"
 if [ -d /usr/local/go/bin ]; then PATH="/usr/local/go/bin:$PATH"; fi
 
 # ---------------------------------------------------------------------
-# 5) History Settings (Bash Fallback)
-#    Atuin will override this, but good to have a fallback.
+# 5) History Settings
 # ---------------------------------------------------------------------
 shopt -s histappend cmdhist
 HISTSIZE=200000
@@ -197,15 +196,6 @@ else
     PS1='\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
 fi
 
-if [ "$IS_MAIN_TERMINAL" = true ]; then
-    if command -v atuin >/dev/null 2>&1; then
-        eval "$(atuin init bash)"
-    fi
-
-    if command -v is >/dev/null 2>&1; then
-      eval "$(is init bash)"
-    fi
-fi
 
 # ---------------------------------------------------------------------
 # 13) Application Aliases
@@ -235,3 +225,7 @@ alias venv='python -m venv .venv && source .venv/bin/activate'
 
 alias reboot-windows='sudo grub-reboot "Windows Boot Manager (on /dev/nvme0n1p1)" && sudo reboot'
 unset -f command_not_found_handle 2>/dev/null || true
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/fauzan/.local/bin:$PATH"

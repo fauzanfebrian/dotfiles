@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────
 # Ghostty Config — Linux Mint Edition (Cobalt2 Theme Integrated)
 # ─────────────────────────────────────────────────────────────
-# Environment: bash + atuin + inshellisense
+# Environment: bash
 # Philosophy: performance, clarity, and comfort
 # ─────────────────────────────────────────────────────────────
 
@@ -75,7 +75,7 @@ keybind = ctrl+shift+c=copy_to_clipboard
 keybind = ctrl+shift+v=paste_from_clipboard
 
 # Quick terminal toggle
-keybind = ctrl+Backquote=toggle_quick_terminal
+keybind = ctrl+backquote=toggle_quick_terminal
 
 # ---------- Safety & System ----------
 async-backend = auto
