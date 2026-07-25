@@ -2,7 +2,7 @@
 # Ghostty Config — Linux Mint Edition (Cobalt2 Theme Integrated)
 # ─────────────────────────────────────────────────────────────
 # Environment: bash
-# Philosophy: performance, clarity, and comfort
+# Philosophy: performance, clarity, comfort, security
 # ─────────────────────────────────────────────────────────────
 
 # ---------- Fonts ----------
@@ -16,38 +16,50 @@ grapheme-width-method = unicode
 # ---------- Theme: Cobalt2 ----------
 theme = "Cobalt2"
 
+# ---------- Cursor ----------
+cursor-style = bar
+cursor-click-to-move = true
+
 # ---------- Window & Layout ----------
 window-decoration = server
 window-theme = ghostty
 window-padding-x = 6
 window-padding-y = 4
 window-padding-balance = true
+window-padding-color = extend
 window-width  = 120
 window-height = 34
 window-show-tab-bar = auto
+window-subtitle = working-directory
+resize-overlay = after-first
+resize-overlay-position = bottom-right
+confirm-close-surface = true
 
 # ---------- Scrolling & Selection ----------
-# limit: 256MB
-scrollback-limit = 268435456
-mouse-scroll-multiplier = 4
+# limit: 64MB per surface (down from 256MB — still generous)
+scrollback-limit = 67108864
+mouse-scroll-multiplier = discrete:4,precision:1
 mouse-hide-while-typing = true
 selection-clear-on-typing = true
 selection-clear-on-copy   = false
 copy-on-select = true
-# right-click-action = copy-or-paste
 clipboard-trim-trailing-spaces = true
 clipboard-paste-protection = true
 clipboard-read  = ask
 clipboard-write = allow
 
+# ---------- Splits ----------
+focus-follows-mouse = true
+unfocused-split-opacity = 0.85
+
 # ---------- Shell & Integration ----------
 shell-integration = detect
-shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo,path
 window-inherit-working-directory = true
 window-inherit-font-size = true
 
 # ---------- Notifications & Links ----------
-link-previews = osc8
+link-previews = true
 app-notifications = clipboard-copy,config-reload
 desktop-notifications = true
 
@@ -77,7 +89,20 @@ keybind = ctrl+shift+v=paste_from_clipboard
 # Quick terminal toggle
 keybind = ctrl+backquote=toggle_quick_terminal
 
+# ---------- Rendering ----------
+minimum-contrast = 1.1
+freetype-load-flags = hinting,light
+
+# ---------- Resource Isolation (systemd cgroups) ----------
+linux-cgroup = single-instance
+linux-cgroup-memory-limit = 2147483648
+linux-cgroup-processes-limit = 512
+
 # ---------- Safety & System ----------
+title-report = false
+vt-kam-allowed = false
+osc-color-report-format = 16-bit
+image-storage-limit = 335544320
 async-backend = auto
 term = xterm-ghostty
 config-file = ?local.conf
